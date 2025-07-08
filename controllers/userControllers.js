@@ -6,8 +6,8 @@ const jwt = require("jsonwebtoken");
 //@route POST /api/users/register
 //@access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { userName, email, password } = req.body;
-    if (!userName || !email || !password) { 
+    const { userName, email, role, password } = req.body;
+    if (!userName || !email || !password || !role) { 
         res.status(400);
         throw new Error("Please fill all the fields");
     }
@@ -21,6 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
     console.log("hashed password:", hashedPassword)
     const user = await User.create({
         userName,
+        role,
         email,
         password: hashedPassword
     });
@@ -67,7 +68,8 @@ const loginUser = asyncHandler(async (req, res) => {
             user: {
                 id: user.id,
                 userName: user.userName,
-                email: user.email
+                email: user.email,
+                role: user.role
             },
         },
         process.env.ACCESS_TOKEN_SECRET,
